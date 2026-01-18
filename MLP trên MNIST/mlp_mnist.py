@@ -70,7 +70,9 @@ class SAM(torch.optim.Optimizer):
             for p in group["params"]:
                 if p.grad is None:
                     continue
-                p.data = self.state[p]["old_p"]
+                # Fix: Kiểm tra xem old_p có tồn tại không
+                if "old_p" in self.state[p]:
+                    p.data = self.state[p]["old_p"]
         self.base_optimizer.step()
         if zero_grad:
             self.zero_grad()
@@ -80,19 +82,21 @@ class SAM(torch.optim.Optimizer):
         assert closure is not None, "SAM requires closure, but it was not provided"
         closure = torch.enable_grad()(closure)
         self.first_step(zero_grad=True)
-        closure()
+        loss = closure()  # Fix: Lưu loss từ closure
         self.second_step()
+        return loss  # Fix: Trả về loss
 
     def _grad_norm(self):
         shared_device = self.param_groups[0]["params"][0].device
-        norm = torch.norm(
-            torch.stack([
-                ((torch.abs(p) if group["adaptive"] else 1.0) * p.grad).norm(p=2).to(shared_device)
-                for group in self.param_groups for p in group["params"]
-                if p.grad is not None
-            ]),
-            p=2
-        )
+        grad_list = [
+            ((torch.abs(p) if group["adaptive"] else 1.0) * p.grad).norm(p=2).to(shared_device)
+            for group in self.param_groups for p in group["params"]
+            if p.grad is not None
+        ]
+        # Fix: Kiểm tra list rỗng để tránh lỗi RuntimeError
+        if not grad_list:
+            return torch.tensor(0.0, device=shared_device)
+        norm = torch.norm(torch.stack(grad_list), p=2)
         return norm
 
     def load_state_dict(self, state_dict):
