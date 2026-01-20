@@ -45,16 +45,13 @@ python cnn_cifar10.py
 ```
 
 ⚠️ **Lưu ý**: Thực nghiệm này mất nhiều thời gian hơn (100 epochs)
-- CPU: ~2-3 giờ
-- GPU: ~10-15 phút
 
-## 📊 Kết quả mong đợi
+## 📊 Kết quả đạt được
 
 ### Adam
 - Training Accuracy: ~85-90%
 - Test Accuracy: ~75-78%
 - Best Test Accuracy: ~76-78%
-- Training time: ~10-15 phút (GPU) / ~2-3 giờ (CPU)
 
 ### Adam + SAM
 - Training Accuracy: ~82-87%

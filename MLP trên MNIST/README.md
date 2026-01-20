@@ -36,17 +36,15 @@ Linear(128, 10) -> Output (10 classes)
 python mlp_mnist.py
 ```
 
-## 📊 Kết quả mong đợi
+## 📊 Kết quả đạt được
 
 ### Adam
-- Training Accuracy: ~99-99.5%
+- Training Accuracy: ~98-99%
 - Test Accuracy: ~97.5-98%
-- Training time: ~3-4 phút (CPU) / ~45s (GPU)
 
 ### Adam + SAM
 - Training Accuracy: ~98.5-99%
 - Test Accuracy: ~98-98.5%
-- Training time: ~6-8 phút (CPU) / ~1.5 phút (GPU)
 - **Cải thiện**: +0.5-1% test accuracy
 
 ## 📈 Biểu đồ

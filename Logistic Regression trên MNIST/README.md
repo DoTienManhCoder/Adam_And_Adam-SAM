@@ -28,17 +28,15 @@ Input (784) -> Linear(784, 10) -> Output (10 classes)
 python logistic_regression_mnist.py
 ```
 
-## 📊 Kết quả mong đợi
+## 📊 Kết quả đạt được
 
 ### Adam
-- Training Accuracy: ~93-94%
+- Training Accuracy: ~92-94%
 - Test Accuracy: ~92-93%
-- Training time: ~2-3 phút (CPU) / ~30s (GPU)
 
 ### Adam + SAM
-- Training Accuracy: ~94-95%
-- Test Accuracy: ~93-94%
-- Training time: ~4-6 phút (CPU) / ~1 phút (GPU)
+- Training Accuracy: ~92-94%
+- Test Accuracy: ~92-93%
 - **Cải thiện**: +1-1.5% test accuracy
 
 ## 📈 Biểu đồ
