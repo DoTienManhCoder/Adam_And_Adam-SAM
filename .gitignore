@@ -88,3 +88,6 @@ desktop.ini
 *.bak
 *.swp
 *~
+
+# Backup files
+README_old_backup.md

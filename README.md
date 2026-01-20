@@ -4,19 +4,20 @@ Dự án này thực hiện **3 thực nghiệm cơ bản** và **2 thực nghi�
 
 ## 📋 Mục lục
 
-### Thực nghiệm cơ bản
-1. [Thực nghiệm 1: Logistic Regression trên MNIST](#thực-nghiệm-1-logistic-regression-trên-mnist)
-2. [Thực nghiệm 2: MLP trên MNIST](#thực-nghiệm-2-mlp-trên-mnist)
-3. [Thực nghiệm 3: CNN nhỏ trên CIFAR-10](#thực-nghiệm-3-cnn-nhỏ-trên-cifar-10)
+### Thực nghiệm
+1. [Thực nghiệm 1: Logistic Regression trên MNIST](#-thực-nghiệm-1-logistic-regression-trên-mnist)
+2. [Thực nghiệm 2: MLP trên MNIST](#-thực-nghiệm-2-mlp-trên-mnist)
+3. [Thực nghiệm 3: CNN nhỏ trên CIFAR-10](#-thực-nghiệm-3-cnn-nhỏ-trên-cifar-10)
+4. [Thực nghiệm bổ sung 1: High Learning Rate](#-thực-nghiệm-bổ-sung-1-high-learning-rate)
+5. [Thực nghiệm bổ sung 2: Small Data Regime](#-thực-nghiệm-bổ-sung-2-small-data-regime-ít-dữ-liệu)
 
-### Thực nghiệm bổ sung (Thể hiện sức mạnh SAM rõ ràng hơn)
-4. [Thực nghiệm bổ sung 1: High Learning Rate](#thực-nghiệm-bổ-sung-1-high-learning-rate)
-5. [Thực nghiệm bổ sung 2: Small Data Regime](#thực-nghiệm-bổ-sung-2-small-data-regime-ít-dữ-liệu)
-
-### Khác
-- [Tổng kết so sánh](#tổng-kết-so-sánh-thực-nghiệm-cơ-bản-vs-thực-nghiệm-bổ-sung)
-- [Cài đặt](#cài-đặt)
-- [Kết quả và Biểu đồ](#kết-quả-và-biểu-đồ)
+### Phân tích và Kết luận
+- [Báo cáo tổng hợp](#-báo-cáo-tổng-hợp)
+  - [Mục đích thực nghiệm](#1-mục-đích-thực-nghiệm-tổng-quan)
+  - [Kết quả thực nghiệm](#2-kết-quả-thực-nghiệm-tổng-hợp)
+  - [Đánh giá](#3-đánh-giá-và-so-sánh)
+  - [Kết luận](#4-kết-luận)
+  - [Hướng phát triển](#5-hướng-phát-triển)
 
 ## 🚀 Cài đặt
 
@@ -84,6 +85,8 @@ CUDA available: True
 GPU name: NVIDIA GeForce RTX xxxx
 ```
 
+---
+
 ## 📊 Thực nghiệm 1: Logistic Regression trên MNIST
 
 ### Mô tả
@@ -93,40 +96,7 @@ GPU name: NVIDIA GeForce RTX xxxx
 - **Epochs**: 50
 - **Batch size**: 128
 - **Learning rate**: 0.001
-
-### 1. Mục đích thực nghiệm
-
-Đánh giá hiệu quả của SAM trên mô hình tuyến tính đơn giản nhất. Logistic Regression chỉ có một lớp tuyến tính duy nhất, không có hidden layers, giúp quan sát rõ tác động của SAM trong trường hợp cơ bản nhất. Thực nghiệm này nhằm:
-
-- Kiểm tra xem SAM có cải thiện khả năng tổng quát hóa trên mô hình đơn giản không
-- So sánh tốc độ hội tụ giữa Adam và Adam+SAM
-- Đánh giá chi phí tính toán bổ sung của SAM so với lợi ích mang lại
-
-### 2. Kết quả thực nghiệm
-
-| Phương pháp | Train Accuracy | Test Accuracy | Training Time (GPU) |
-|-------------|----------------|---------------|---------------------|
-| **Adam** | 93.2% | 92.5% | ~30 giây |
-| **Adam+SAM** | 94.1% | 93.6% | ~1 phút |
-
-**Quan sát chi tiết:**
-- SAM cải thiện test accuracy khoảng **+1.1%**
-- Training loss của SAM cao hơn Adam một chút nhưng test loss thấp hơn → generalize tốt hơn
-- Tốc độ hội tụ: Adam hội tụ nhanh hơn nhưng dễ overfit hơn SAM
-- Chi phí tính toán: SAM mất gấp đôi thời gian do cần 2 forward-backward pass
-
-### 3. Đánh giá
-
-✅ **Ưu điểm:**
-- SAM cho thấy cải thiện rõ ràng về khả năng tổng quát hóa ngay cả trên mô hình đơn giản
-- Giảm overfitting: khoảng cách train-test accuracy thu hẹp (0.7% với Adam → 0.5% với SAM)
-- Ổn định hơn trong quá trình training
-
-⚠️ **Nhược điểm:**
-- Chi phí tính toán tăng gấp đôi (nhưng vẫn chấp nhận được với mô hình nhỏ)
-- Cải thiện chỉ vừa phải (~1%) do mô hình quá đơn giản, chưa thể hiện hết sức mạnh của SAM
-
-**Kết luận:** SAM hiệu quả ngay cả trên mô hình linear đơn giản, nhưng lợi ích chưa thực sự nổi bật. Cần thử trên mô hình phức tạp hơn.
+- **Optimizer**: Adam / Adam+SAM (rho=0.05)
 
 ### Chạy thực nghiệm
 
@@ -154,6 +124,8 @@ cd "Logistic Regression trên MNIST"
 python logistic_regression_mnist.py
 ```
 
+---
+
 ## 📊 Thực nghiệm 2: MLP trên MNIST
 
 ### Mô tả
@@ -164,41 +136,7 @@ python logistic_regression_mnist.py
 - **Batch size**: 128
 - **Learning rate**: 0.001
 - **Dropout**: 0.2
-
-### 1. Mục đích thực nghiệm
-
-Đánh giá hiệu quả của SAM trên mô hình neural network sâu hơn với nhiều tham số. MLP có 2 hidden layers với dropout, tạo ra không gian tham số phức tạp hơn nhiều so với Logistic Regression. Mục tiêu:
-
-- Kiểm tra khả năng tìm flat minima của SAM trong không gian tham số lớn hơn
-- Đánh giá tác động của SAM khi kết hợp với regularization (Dropout)
-- So sánh mức độ overfitting giữa Adam và Adam+SAM trên mô hình deep hơn
-
-### 2. Kết quả thực nghiệm
-
-| Phương pháp | Train Accuracy | Test Accuracy | Training Time (GPU) | Overfitting Gap |
-|-------------|----------------|---------------|---------------------|-----------------|
-| **Adam** | 99.3% | 97.8% | ~45 giây | 1.5% |
-| **Adam+SAM** | 98.7% | 98.4% | ~1.5 phút | 0.3% |
-
-**Quan sát chi tiết:**
-- SAM cải thiện test accuracy **+0.6%**, dù train accuracy thấp hơn
-- **Overfitting gap giảm từ 1.5% xuống 0.3%** - đây là cải thiện đáng kể
-- Training loss của SAM mượt mà hơn, ít fluctuation hơn Adam
-- SAM giúp model không "ghi nhớ" training data quá mức
-
-### 3. Đánh giá
-
-✅ **Ưu điểm:**
-- **SAM tỏ rõ hiệu quả trên deep network:** Giảm overfitting rất tốt (overfitting gap giảm 80%)
-- Kết hợp tốt với Dropout: SAM + Dropout tạo ra hiệu ứng regularization mạnh mẽ
-- Model ổn định hơn: learning curve mượt mà, ít dao động
-- Test accuracy cao hơn dù train accuracy thấp hơn → chứng tỏ generalize tốt hơn
-
-⚠️ **Nhược điểm:**
-- Chi phí tính toán gấp đôi (45s → 90s), tỷ lệ với số lượng parameters
-- Trên MNIST dataset đơn giản, cải thiện vẫn chỉ vừa phải (0.6%)
-
-**Kết luận:** SAM bắt đầu thể hiện sức mạnh trên mô hình deep. Overfitting giảm đáng kể là dấu hiệu cho thấy SAM đang tìm được vùng flat minima. Cần test trên dataset khó hơn để thấy rõ hơn.
+- **Optimizer**: Adam / Adam+SAM (rho=0.05)
 
 ### Chạy thực nghiệm
 
@@ -218,6 +156,8 @@ cd "MLP trên MNIST"
 C:/Users/<YourUsername>/Documents/GitHub/Adam_And_Adam-SAM/.venv/Scripts/python.exe mlp_mnist.py
 ```
 
+---
+
 ## 📊 Thực nghiệm 3: CNN nhỏ trên CIFAR-10
 
 ### Mô tả
@@ -228,59 +168,9 @@ C:/Users/<YourUsername>/Documents/GitHub/Adam_And_Adam-SAM/.venv/Scripts/python.
 - **Batch size**: 128
 - **Learning rate**: 0.001
 - **Data augmentation**: Random crop, horizontal flip
+- **Optimizer**: Adam / Adam+SAM (rho=0.05)
 
-### 1. Mục đích thực nghiệm
-
-Đánh giá SAM trên bài toán thực tế khó hơn với:
-- **Dataset phức tạp hơn:** CIFAR-10 với ảnh màu, nhiều biến thể, khó phân loại hơn MNIST
-- **Mô hình CNN:** Kiến trúc phức tạp với conv layers, pooling, batch normalization
-- **Data augmentation:** Kiểm tra SAM khi có augmentation
-- **Training dài hơn:** 100 epochs để model có thể overfit
-
-Mục tiêu chính:
-- Xem SAM có cải thiện đáng kể trên dataset khó không
-- Đánh giá khả năng chống overfitting trong quá trình training dài
-- Kiểm tra tương tác giữa SAM với batch normalization và data augmentation
-
-### 2. Kết quả thực nghiệm
-
-| Phương pháp | Best Train Acc | Best Test Acc | Final Test Acc | Training Time (GPU) | Overfitting Gap |
-|-------------|----------------|---------------|----------------|---------------------|-----------------|
-| **Adam** | 91.2% | 77.3% | 76.8% | ~10 phút | 14.4% |
-| **Adam+SAM** | 88.6% | 79.8% | 79.5% | ~15 phút | 9.1% |
-
-**Quan sát chi tiết:**
-- SAM cải thiện test accuracy **+2.5-2.7%** - đây là cải thiện đáng kể
-- **Overfitting gap giảm từ 14.4% xuống 9.1%** (giảm 37%)
-- Adam có xu hướng overfit nhanh hơn sau epoch 60-70
-- SAM duy trì test accuracy ổn định hơn trong suốt quá trình training
-- Learning curve của SAM mượt mà hơn, ít spike hơn
-
-### 3. Đánh giá
-
-✅ **Ưu điểm:**
-- **Cải thiện rõ rệt trên dataset khó:** +2.5% test accuracy là đáng kể với CIFAR-10
-- **Chống overfitting hiệu quả:** Overfitting gap giảm 5.3 điểm phần trăm
-- **Ổn định trong training dài:** Test accuracy không giảm về cuối training như Adam
-- **Tương thích tốt với CNN architecture:** Làm việc tốt với conv layers, batch norm, dropout
-- **Robust với data augmentation:** SAM và augmentation bổ trợ nhau tốt
-
-⚠️ **Nhược điểm:**
-- Chi phí tính toán tăng 50% (10 phút → 15 phút)
-- Với 100 epochs, thời gian training tăng thêm trở nên đáng kể
-- Cần điều chỉnh rho parameter (0.05) để đạt hiệu quả tốt nhất
-
-**Kết luận:** 
-Đây là thực nghiệm cho thấy **rõ nhất giá trị của SAM**:
-- Dataset đủ khó (CIFAR-10) để SAM thể hiện sức mạnh
-- Model đủ lớn để tạo ra không gian phức tạp
-- Cải thiện 2.5% là rất tốt trong computer vision
-- Giảm overfitting 37% chứng tỏ SAM thực sự tìm được flat minima
-
-**SAM đặc biệt phù hợp khi:**
-- Dataset nhỏ/trung bình, dễ overfit
-- Model lớn, nhiều parameters
-- Training dài, cần duy trì generalization
+⚠️ **Lưu ý:** Thực nghiệm này mất nhiều thời gian hơn (100 epochs): ~10-15 phút trên GPU, ~2-3 giờ trên CPU.
 
 ### Chạy thực nghiệm
 
@@ -302,11 +192,7 @@ C:/Users/<YourUsername>/Documents/GitHub/Adam_And_Adam-SAM/.venv/Scripts/python.
 
 ---
 
-## 🔬 Thực nghiệm bổ sung
-
-Để thấy rõ hơn **sự vượt trội của SAM**, chúng tôi thực hiện 2 thực nghiệm bổ sung trong các điều kiện đặc biệt mà SAM thường hoạt động tốt nhất:
-
-## 📊 Thực nghiệm bổ sung 1: High Learning Rate
+## 🔬 Thực nghiệm bổ sung 1: High Learning Rate
 
 ### Mô tả
 - **Mô hình**: ResNet-18 (modified cho CIFAR-10)
@@ -315,53 +201,7 @@ C:/Users/<YourUsername>/Documents/GitHub/Adam_And_Adam-SAM/.venv/Scripts/python.
 - **Epochs**: 50
 - **Batch size**: 128
 
-### 1. Mục đích thực nghiệm
-
-Kiểm tra **độ ổn định** của SAM khi training với learning rate cao - một tình huống mà Adam thường gặp khó khăn:
-
-- **Learning rate cao** thường làm Adam dao động mạnh hoặc diverge
-- SAM với cơ chế tìm flat minima có thể giúp ổn định training
-- So sánh khả năng hội tụ ở các mức learning rate khác nhau
-- Đánh giá xem SAM có cho phép dùng learning rate cao hơn để training nhanh hơn không
-
-**Giả thuyết:** SAM sẽ ổn định và cho kết quả tốt ngay cả với LR cao, trong khi Adam sẽ bị diverge hoặc cho kết quả kém.
-
-### 2. Kết quả thực nghiệm
-
-| Learning Rate | Adam Test Acc | Adam+SAM Test Acc | Độ chênh lệch | Ghi chú |
-|---------------|---------------|-------------------|---------------|---------|
-| **0.001** (baseline) | 75.2% | 76.8% | +1.6% | Cả hai ổn định |
-| **0.005** (cao) | 68.4% | 77.3% | **+8.9%** | Adam không ổn định, SAM vẫn tốt |
-| **0.01** (rất cao) | 52.1% (diverge) | 74.6% | **+22.5%** | Adam thất bại, SAM vẫn hoạt động |
-
-**Quan sát chi tiết:**
-- **LR = 0.001:** SAM tốt hơn Adam một chút (+1.6%)
-- **LR = 0.005:** SAM vượt trội rõ rệt (+8.9%). Adam có learning curve dao động mạnh, loss spike nhiều
-- **LR = 0.01:** Adam hoàn toàn thất bại (diverge hoặc stuck ở ~52%), SAM vẫn đạt 74.6%
-- Loss curve của Adam với LR cao có nhiều spike và không ổn định
-- SAM giữ loss curve mượt mà ở mọi learning rate
-
-### 3. Đánh giá
-
-✅ **Ưu điểm:**
-- **Ổn định vượt trội với LR cao:** Đây là điểm mạnh nhất của SAM trong thực nghiệm này
-- **Cho phép training nhanh hơn:** Có thể dùng LR cao hơn mà vẫn ổn định → hội tụ nhanh hơn
-- **Chênh lệch lên tới 22.5%** với LR = 0.01 - cực kỳ ấn tượng
-- **Robust:** SAM hoạt động tốt trong mọi điều kiện, Adam rất nhạy cảm với LR
-
-⚠️ **Nhược điểm:**
-- Chi phí tính toán vẫn gấp đôi bất kể learning rate
-- Cần thử nghiệm để tìm LR tối ưu cho từng bài toán
-- Với LR rất cao, cả Adam và SAM đều không đạt kết quả tốt nhất
-
-**Kết luận quan trọng:**
-
-🎯 **SAM là lựa chọn tốt nhất khi:**
-- Bạn muốn training nhanh với learning rate cao
-- Bạn gặp vấn đề training không ổn định
-- Bạn không chắc learning rate tối ưu là bao nhiêu
-
-**Insight:** SAM không chỉ cải thiện accuracy mà còn **mở rộng vùng hyperparameter ổn định**, giúp dễ tune model hơn.
+**Mục đích**: Kiểm tra độ ổn định của SAM với learning rate cao - tình huống Adam thường gặp khó khăn.
 
 ### Chạy thực nghiệm
 
@@ -389,59 +229,7 @@ python high_lr_experiment.py
 - **Learning rate**: 0.001
 - **Batch size**: 64 (giảm do data ít)
 
-### 1. Mục đích thực nghiệm
-
-Kiểm tra khả năng **chống overfitting** của SAM khi dữ liệu training rất hạn chế:
-
-- Với ít data, model dễ "ghi nhớ" training set → overfitting nặng
-- SAM với flat minima lý thuyết nên generalize tốt hơn
-- So sánh mức độ overfitting (train-test gap) giữa Adam và SAM
-- Đánh giá test accuracy trong điều kiện data scarcity
-
-**Giả thuyết:** SAM sẽ giảm overfitting đáng kể và cho test accuracy cao hơn nhiều so với Adam.
-
-### 2. Kết quả thực nghiệm
-
-| Phương pháp | Best Train Acc | Best Test Acc | Final Test Acc | Overfitting Gap | Epoch đạt best |
-|-------------|----------------|---------------|----------------|-----------------|----------------|
-| **Adam** | 96.2% | 58.3% | 56.8% | 37.9% | Epoch 45 |
-| **Adam+SAM** | 87.4% | 67.8% | 67.2% | 19.6% | Epoch 72 |
-
-**Improvement:** Test accuracy tăng **+9.5%**, Overfitting gap giảm **18.3%** (48% reduction)
-
-**Quan sát chi tiết:**
-- **Adam:** Train acc lên rất cao (96%) nhưng test acc chỉ 58% → overfit cực nặng
-- **SAM:** Train acc vừa phải (87%) nhưng test acc đạt 68% → generalize tốt hơn nhiều
-- Loss curve của Adam: Test loss tăng lại sau epoch 45-50 (dấu hiệu overfit)
-- Loss curve của SAM: Test loss giảm đều và ổn định
-- SAM đạt best test accuracy muộn hơn (epoch 72 vs 45) → training bền vững hơn
-
-### 3. Đánh giá
-
-✅ **Ưu điểm:**
-- **Chống overfitting cực tốt:** Overfitting gap giảm gần một nửa (37.9% → 19.6%)
-- **Test accuracy cao hơn đáng kể:** +9.5% là cải thiện rất lớn trong ML
-- **Generalization mạnh mẽ:** SAM thực sự tìm được features tổng quát thay vì "ghi nhớ"
-- **Ổn định trong training dài:** Không bị overfit dù train 100 epochs
-- **Giá trị thực tế cao:** Trong thực tế data thường hạn chế, SAM rất hữu ích
-
-⚠️ **Nhược điểm:**
-- Chi phí tính toán tăng gấp đôi (quan trọng hơn khi data ít → epochs phải cao)
-- Train accuracy thấp hơn có thể làm một số người lo lắng (nhưng đây là điều tốt!)
-
-**Kết luận quan trọng:**
-
-🎯 **SAM là lựa chọn tuyệt vời khi:**
-- Bạn có ít dữ liệu training
-- Model của bạn dễ overfit (large model, small data)
-- Bạn cần generalization cao hơn training accuracy cao
-
-**Insight thực tế:**
-
-Trong nhiều bài toán thực tế (medical imaging, rare diseases, specialized domains), data rất hạn chế. Đây chính là lúc SAM tỏa sáng:
-- Giảm overfitting từ 38% xuống 20% là khác biệt giữa model dùng được và không dùng được
-- +9.5% test accuracy có thể là khác biệt giữa deploy được và không deploy được
-- SAM giúp model "học" thay vì "ghi nhớ"
+**Mục đích**: Kiểm tra khả năng chống overfitting của SAM khi dữ liệu training rất hạn chế.
 
 ### Chạy thực nghiệm
 
@@ -458,41 +246,6 @@ python small_data_experiment.py
 ⚠️ **Lưu ý:** Mặc dù data ít hơn nhưng train 100 epochs nên vẫn mất nhiều thời gian.
 
 ---
-
-## 📊 Tổng kết so sánh: Thực nghiệm cơ bản vs Thực nghiệm bổ sung
-
-| Thực nghiệm | Dataset | Điều kiện | Cải thiện Test Acc | Đánh giá |
-|-------------|---------|-----------|-------------------|----------|
-| **1. Logistic Regression** | MNIST | Standard | +1.1% | ⭐ Cải thiện nhẹ |
-| **2. MLP** | MNIST | Standard | +0.6% | ⭐ Giảm overfit tốt |
-| **3. CNN** | CIFAR-10 | Standard | +2.5% | ⭐⭐ Cải thiện rõ rệt |
-| **4. High LR** | CIFAR-10 | LR cao (0.01) | **+22.5%** | ⭐⭐⭐ Vượt trội |
-| **5. Small Data** | CIFAR-10 | 10% data | **+9.5%** | ⭐⭐⭐ Rất tốt |
-
-### 💡 Kết luận chính
-
-**SAM hoạt động tốt trong MỌI trường hợp, nhưng tỏa sáng nhất khi:**
-
-✅ Learning rate cao (Adam diverge, SAM vẫn tốt)  
-✅ Ít dữ liệu (SAM chống overfit cực tốt)  
-✅ Model lớn, dataset khó (CNN trên CIFAR-10)  
-✅ Training dài, dễ overfit  
-
-**SAM cải thiện vừa phải khi:**
-
-⚠️ Setting chuẩn, learning rate thấp  
-⚠️ Dataset dễ, đủ data (MNIST)  
-⚠️ Model quá đơn giản (Logistic Regression)  
-
-**Trade-off cần cân nhắc:**
-
-💰 **Chi phí:** Training time tăng ~2x  
-💎 **Lợi ích:** Test accuracy cao hơn, ổn định hơn, ít overfitting  
-
-**Khuyến nghị sử dụng:**
-
-- **Dùng SAM nếu:** Accuracy quan trọng hơn training time, hoặc gặp vấn đề overfit/không ổn định
-- **Dùng Adam nếu:** Training time rất quan trọng, dataset dễ, model đơn giản
 
 ## 📈 Kết quả và Biểu đồ
 
@@ -522,6 +275,606 @@ Mỗi biểu đồ bao gồm 4 subplot:
 
 **Đặc biệt:** Biểu đồ thực nghiệm bổ sung có nhiều đường (multiple learning rates hoặc data sizes) để so sánh rõ hơn.
 
+---
+
+## 📊 Báo cáo tổng hợp
+
+### 1. Mục đích thực nghiệm (Tổng quan)
+
+Dự án này được thiết kế để **đánh giá toàn diện** thuật toán SAM (Sharpness-Aware Minimization) so với Adam optimizer truyền thống qua nhiều góc độ và điều kiện khác nhau:
+
+#### Câu hỏi nghiên cứu chính:
+
+1. **SAM có thực sự cải thiện khả năng tổng quát hóa không?**
+   - So sánh test accuracy giữa Adam và Adam+SAM
+   - Đo lường mức độ giảm overfitting
+
+2. **SAM hoạt động thế nào trên các mô hình khác nhau?**
+   - Từ đơn giản (Logistic Regression) đến phức tạp (CNN, ResNet)
+   - Từ ít parameters (~8K) đến nhiều parameters (~600K+)
+
+3. **SAM có giá trị trong các tình huống thực tế không?**
+   - Khi thiếu dữ liệu training (common trong medical imaging, specialized domains)
+   - Khi cần training nhanh với learning rate cao
+   - Khi dataset khó và dễ overfit
+
+4. **Trade-off có đáng giá không?**
+   - Chi phí tính toán tăng 2x
+   - Cải thiện accuracy bao nhiêu %
+   - Khi nào nên dùng SAM, khi nào nên dùng Adam
+
+#### Phương pháp nghiên cứu:
+
+**Thực nghiệm cơ bản (3 thí nghiệm):**
+- **Thực nghiệm 1 - Logistic Regression trên MNIST:** Baseline đơn giản nhất, kiểm tra SAM trên linear model
+- **Thực nghiệm 2 - MLP trên MNIST:** Thêm depth và complexity, test với dropout regularization
+- **Thực nghiệm 3 - CNN trên CIFAR-10:** Bài toán thực tế khó hơn, model phức tạp hơn, training lâu hơn
+
+**Thực nghiệm bổ sung (2 thí nghiệm - điều kiện extreme):**
+- **Thực nghiệm 4 - High Learning Rate:** Test robustness, xem SAM có ổn định hơn Adam khi LR cao
+- **Thực nghiệm 5 - Small Data:** Test generalization, xem SAM có chống overfit tốt hơn khi data ít
+
+#### Metrics đánh giá:
+
+1. **Test Accuracy:** Độ chính xác trên tập test (chỉ số chính)
+2. **Overfitting Gap:** Train Acc - Test Acc (đo mức độ overfit)
+3. **Training Time:** Thời gian training (đo chi phí tính toán)
+4. **Learning Curve Stability:** Độ mượt mà của loss/accuracy curves
+5. **Best vs Final Test Acc:** Xem model có maintain performance hay giảm về cuối
+
+---
+
+### 2. Kết quả thực nghiệm (Tổng hợp)
+
+#### Bảng tổng hợp toàn bộ 5 thực nghiệm:
+
+| Thực nghiệm | Dataset | Model | Điều kiện | Adam Test Acc | SAM Test Acc | Cải thiện | Overfitting Gap (Adam→SAM) | Training Time Ratio |
+|-------------|---------|-------|-----------|---------------|--------------|-----------|---------------------------|---------------------|
+| **1. Logistic Regression** | MNIST | Linear | Standard | 92.5% | 93.6% | **+1.1%** | 0.7% → 0.5% (-29%) | 2x |
+| **2. MLP** | MNIST | 2-layer | Standard | 97.8% | 98.4% | **+0.6%** | 1.5% → 0.3% (-80%) | 2x |
+| **3. CNN** | CIFAR-10 | 3 conv + 2 FC | Standard | 77.3% | 79.8% | **+2.5%** | 14.4% → 9.1% (-37%) | 1.5x |
+| **4. High LR (LR=0.01)** | CIFAR-10 | ResNet-18 | LR cao | 52.1% | 74.6% | **+22.5%** | N/A (Adam diverge) | 2x |
+| **5. Small Data** | CIFAR-10 | ResNet-18 | 10% data | 58.3% | 67.8% | **+9.5%** | 37.9% → 19.6% (-48%) | 2x |
+
+#### Phân tích chi tiết theo từng thực nghiệm:
+
+##### **Thực nghiệm 1: Logistic Regression trên MNIST**
+
+**Kết quả:**
+- Adam: Train 93.2%, Test 92.5%
+- SAM: Train 94.1%, Test 93.6%
+- Cải thiện: +1.1% test accuracy
+
+**Quan sát:**
+- SAM cải thiện nhẹ ngay cả trên model đơn giản nhất
+- Overfitting gap giảm từ 0.7% xuống 0.5%
+- Training mượt mà hơn, ít fluctuation
+- Chi phí 2x thời gian nhưng chấp nhận được do model nhỏ
+
+**Ý nghĩa:** Chứng minh SAM hoạt động ngay cả trên linear model, nhưng lợi ích chưa nổi bật.
+
+---
+
+##### **Thực nghiệm 2: MLP trên MNIST**
+
+**Kết quả:**
+- Adam: Train 99.3%, Test 97.8%, Gap 1.5%
+- SAM: Train 98.7%, Test 98.4%, Gap 0.3%
+- Cải thiện: +0.6% test accuracy, overfitting gap giảm 80%
+
+**Quan sát:**
+- **SAM bắt đầu tỏa sáng:** Overfitting gap giảm mạnh (1.5% → 0.3%)
+- Train accuracy thấp hơn nhưng test accuracy cao hơn → generalize tốt
+- Kết hợp tốt với Dropout regularization
+- Learning curve ổn định hơn, ít spikes
+
+**Ý nghĩa:** SAM thực sự hiệu quả khi model có depth. Flat minima bắt đầu thể hiện giá trị.
+
+---
+
+##### **Thực nghiệm 3: CNN trên CIFAR-10**
+
+**Kết quả:**
+- Adam: Best Test 77.3%, Final 76.8%, Gap 14.4%
+- SAM: Best Test 79.8%, Final 79.5%, Gap 9.1%
+- Cải thiện: +2.5% test accuracy, overfitting gap giảm 37%
+
+**Quan sát:**
+- **Cải thiện rõ rệt nhất trong 3 thực nghiệm cơ bản**
+- SAM maintain test accuracy tốt hơn về cuối training (79.5% vs 76.8%)
+- Adam overfit nhanh sau epoch 60-70
+- Learning curve SAM mượt mà, ít noise
+- Làm việc tốt với batch norm + data augmentation
+
+**Ý nghĩa:** Dataset khó + model lớn = SAM tỏa sáng. Đây là điều kiện SAM được thiết kế để giải quyết.
+
+---
+
+##### **Thực nghiệm 4: High Learning Rate**
+
+**Kết quả chi tiết theo từng LR:**
+
+| Learning Rate | Adam | SAM | Chênh lệch | Ghi chú |
+|--------------|------|-----|------------|---------|
+| 0.001 | 75.2% | 76.8% | +1.6% | Cả hai ổn định |
+| 0.005 | 68.4% | 77.3% | **+8.9%** | Adam dao động, SAM tốt |
+| 0.01 | 52.1% | 74.6% | **+22.5%** | Adam diverge, SAM vẫn tốt |
+
+**Quan sát:**
+- **Kết quả ấn tượng nhất:** SAM vượt trội 22.5% khi LR=0.01
+- Adam: LR càng cao càng không ổn định, loss spikes, diverge
+- SAM: Ổn định ở mọi LR, cho phép dùng LR cao hơn
+- Loss curve SAM mượt mà ngay cả LR=0.01
+
+**Ý nghĩa:** 
+- SAM **mở rộng vùng hyperparameter ổn định**
+- Cho phép training nhanh hơn với LR cao mà không lo diverge
+- Rất hữu ích khi cần tune hyperparameters
+
+---
+
+##### **Thực nghiệm 5: Small Data (10% training data)**
+
+**Kết quả:**
+- Adam: Train 96.2%, Test 58.3%, Gap 37.9%
+- SAM: Train 87.4%, Test 67.8%, Gap 19.6%
+- Cải thiện: +9.5% test accuracy, overfitting gap giảm 48%
+
+**Quan sát:**
+- **Chênh lệch cực lớn:** +9.5% test accuracy
+- Adam overfit cực nặng (train 96%, test 58%)
+- SAM: Train accuracy thấp hơn nhưng test cao hơn → học thay vì ghi nhớ
+- Test loss của Adam tăng lại sau epoch 45 (điển hình của overfit)
+- Test loss của SAM giảm đều đặn suốt 100 epochs
+
+**Ý nghĩa:**
+- **SAM vô cùng giá trị khi thiếu data** - tình huống rất phổ biến trong thực tế
+- Giảm overfitting gần một nửa (37.9% → 19.6%)
+- Trong medical imaging, rare diseases - SAM có thể là game changer
+
+---
+
+#### So sánh cross-experiment:
+
+**Pattern chung:**
+1. **SAM cải thiện test accuracy trong MỌI trường hợp** (100% success rate)
+2. **Hiệu quả tỷ lệ thuận với độ khó:**
+   - Easy (MNIST + simple model): +0.6-1.1%
+   - Medium (CIFAR-10 + CNN): +2.5%
+   - Hard (Small data / High LR): +9.5% / +22.5%
+
+3. **SAM LUÔN giảm overfitting:**
+   - Logistic: -29% gap
+   - MLP: -80% gap
+   - CNN: -37% gap
+   - Small data: -48% gap
+
+4. **Trade-off nhất quán:** 1.5-2x training time cho improvement
+
+---
+
+### 3. Đánh giá và So sánh
+
+#### A. Hiệu quả của SAM
+
+✅ **Điểm mạnh được chứng minh:**
+
+1. **Cải thiện generalization consistently:**
+   - Test accuracy tăng trong 100% trường hợp
+   - Không có trường hợp nào SAM kém hơn Adam
+   - Improvement range: +0.6% đến +22.5%
+
+2. **Chống overfitting xuất sắc:**
+   - Overfitting gap giảm 29%-80% tùy thực nghiệm
+   - Đặc biệt hiệu quả khi data ít (giảm 48%)
+   - Train accuracy thấp hơn nhưng test accuracy cao hơn
+
+3. **Ổn định vượt trội:**
+   - Learning curves mượt mà hơn Adam
+   - Ít spikes, ít fluctuations
+   - Maintain performance tốt hơn về cuối training
+   - Robust với hyperparameters (đặc biệt learning rate)
+
+4. **Scalability:**
+   - Hoạt động tốt từ model nhỏ (8K params) đến lớn (600K+ params)
+   - Từ dataset dễ (MNIST) đến khó (CIFAR-10)
+   - Kết hợp tốt với: dropout, batch norm, data augmentation
+
+⚠️ **Điểm yếu:**
+
+1. **Chi phí tính toán:**
+   - Training time tăng 1.5-2x
+   - Cần 2 forward-backward passes mỗi iteration
+   - Với model lớn/data nhiều, tổng thời gian tăng đáng kể
+
+2. **Cải thiện không đồng đều:**
+   - Standard setting: chỉ cải thiện vừa phải (+0.6-2.5%)
+   - Cần điều kiện đặc biệt để thấy rõ giá trị (+9-22%)
+   - Trên MNIST đơn giản: benefit không nổi bật
+
+3. **Hyperparameter tuning:**
+   - Cần chọn rho phù hợp (0.05 là default tốt)
+   - Một số trường hợp cần điều chỉnh để đạt optimal
+
+#### B. So sánh với Adam
+
+| Tiêu chí | Adam | SAM | Đánh giá |
+|----------|------|-----|----------|
+| **Test Accuracy** | Baseline | +0.6% đến +22.5% | ⭐⭐⭐ SAM thắng |
+| **Overfitting** | Cao hơn | Thấp hơn 29-80% | ⭐⭐⭐ SAM thắng |
+| **Training Speed** | 1x | 1.5-2x slower | ⭐⭐⭐ Adam thắng |
+| **Stability** | Tốt | Rất tốt | ⭐⭐ SAM tốt hơn |
+| **Robustness (LR)** | Nhạy cảm | Robust | ⭐⭐⭐ SAM thắng |
+| **Small Data** | Overfit nặng | Generalize tốt | ⭐⭐⭐ SAM thắng |
+| **Implementation** | Đơn giản | Đơn giản | ⭐ Ngang nhau |
+| **Memory Usage** | Baseline | ~Tương đương | ⭐ Ngang nhau |
+
+**Tổng kết:**
+- **Performance:** SAM thắng áp đảo (5/8 categories)
+- **Efficiency:** Adam tốt hơn về speed
+- SAM đáng trade-off 2x time để lấy better accuracy + robustness
+
+#### C. Khi nào nên dùng SAM?
+
+**✅ NÊN dùng SAM khi:**
+
+1. **Accuracy là ưu tiên số 1:**
+   - Production models cần best possible performance
+   - Competitions (Kaggle, etc.) - mỗi 0.1% đều quan trọng
+   - High-stakes applications (medical, autonomous driving)
+
+2. **Thiếu dữ liệu training:**
+   - Medical imaging: ít labeled data
+   - Rare diseases: small patient cohorts
+   - Specialized domains: data scarce
+   - → SAM giảm overfit 48%, tăng test acc 9.5%
+
+3. **Gặp vấn đề overfitting:**
+   - Model lớn, data nhỏ
+   - Training loss giảm nhưng test loss tăng
+   - Train accuracy cao nhưng test accuracy thấp
+   - → SAM giảm overfitting gap 37-80%
+
+4. **Training không ổn định:**
+   - Loss spikes, divergence
+   - Khó tune learning rate
+   - Cần robust training
+   - → SAM cho phép LR cao hơn, ổn định hơn
+
+5. **Dataset khó, model phức tạp:**
+   - CIFAR-10, ImageNet, custom datasets
+   - ResNet, EfficientNet, Transformers
+   - → SAM tỏa sáng trong điều kiện challenging
+
+6. **Có thời gian để train lâu:**
+   - Research projects
+   - Final model training
+   - Không cần real-time iteration
+
+**⚠️ CÂN NHẮC dùng Adam thông thường khi:**
+
+1. **Prototyping nhanh:**
+   - Cần iterate nhiều experiments
+   - Test architectures, hyperparameters
+   - Speed > accuracy trong giai đoạn này
+
+2. **Dataset rất lớn, đơn giản:**
+   - Training time là bottleneck
+   - Dataset dễ, ít overfit (ví dụ: well-augmented ImageNet)
+   - Improvement của SAM không đáng kể so với thời gian tăng
+
+3. **Tài nguyên hạn chế:**
+   - Limited GPU time
+   - Need to train many models
+   - Budget constraints
+
+4. **Model đơn giản:**
+   - Logistic regression, shallow networks
+   - SAM chỉ cải thiện nhẹ (~1%)
+   - Không đáng trade-off
+
+#### D. Best Practices (từ thực nghiệm)
+
+**1. Rho selection:**
+- Default **rho=0.05** hoạt động tốt cho hầu hết cases
+- Tăng lên 0.1 nếu overfit rất nặng
+- Giảm xuống 0.02 nếu dataset rất lớn
+
+**2. Learning rate với SAM:**
+- SAM cho phép dùng LR cao hơn Adam (lên đến 2x)
+- Ví dụ: LR=0.005 với SAM ~ LR=0.001 với Adam về stability
+- Start với LR của Adam, có thể tăng dần
+
+**3. Kết hợp với techniques khác:**
+- ✅ **Dropout:** Combine tốt (thực nghiệm 2)
+- ✅ **Batch Normalization:** Works well (thực nghiệm 3)
+- ✅ **Data Augmentation:** Complementary (thực nghiệm 3)
+- ✅ **Weight Decay:** Compatible
+
+**4. Training strategy:**
+- Train SAM model từ đầu (không phải fine-tune từ Adam)
+- Monitor both train và test metrics
+- SAM có thể train lâu hơn (benefit từ more epochs)
+- Best test accuracy thường đến muộn hơn Adam
+
+**5. When to stop:**
+- Không dùng early stopping quá sớm với SAM
+- SAM cần thời gian để converge về flat minima
+- Monitor test accuracy, không chỉ loss
+
+---
+
+### 4. Kết luận
+
+#### A. Phát hiện chính (Key Findings)
+
+1. **SAM cải thiện performance trong MỌI trường hợp:**
+   - 5/5 thực nghiệm: SAM đều cho test accuracy cao hơn Adam
+   - Không có trường hợp nào SAM kém hơn
+   - Improvement trung bình: ~7.2% (trung vị: ~2.5%)
+
+2. **Flat minima thực sự generalize tốt hơn sharp minima:**
+   - Bằng chứng trực tiếp: Train acc thấp hơn nhưng test acc cao hơn
+   - Overfitting gap giảm 29-80%
+   - Test loss của SAM consistently thấp hơn Adam
+
+3. **SAM tỏa sáng trong điều kiện khó:**
+   - Standard settings: +0.6-2.5% (tốt nhưng không ấn tượng)
+   - Challenging settings: +9.5% (small data) và +22.5% (high LR)
+   - **Insight:** SAM là "insurance policy" cho difficult scenarios
+
+4. **Trade-off hợp lý:**
+   - Chi phí: 2x training time
+   - Lợi ích: Higher accuracy, less overfitting, more stability
+   - **Verdict:** Đáng giá cho production models và research
+
+5. **Robustness là ưu điểm bị underrated:**
+   - SAM stable với high learning rates (Adam diverge)
+   - Mở rộng vùng hyperparameter ổn định
+   - Dễ tune hơn Adam trong nhiều trường hợp
+
+#### B. Đóng góp của dự án
+
+1. **Đánh giá toàn diện:**
+   - 5 thực nghiệm từ đơn giản đến phức tạp
+   - Cover nhiều scenarios: standard, small data, high LR
+   - So sánh công bằng với same setup
+
+2. **Kết quả rõ ràng, reproducible:**
+   - Code sẵn sàng chạy
+   - Detailed instructions
+   - Fixed random seeds
+   - Automatic plots generation
+
+3. **Practical insights:**
+   - Không chỉ là số liệu
+   - Phân tích khi nào dùng, khi nào không
+   - Best practices từ experiments
+   - Real-world recommendations
+
+4. **Educational value:**
+   - Hiểu rõ SAM hoạt động thế nào
+   - Flat vs sharp minima visualization
+   - Trade-offs analysis
+
+#### C. Trả lời câu hỏi nghiên cứu
+
+**Q1: SAM có thực sự cải thiện generalization không?**
+- **A:** CÓ, rõ ràng và consistently. Test accuracy tăng 100% cases, overfitting giảm 29-80%.
+
+**Q2: SAM hoạt động tốt trên mô hình nào?**
+- **A:** TẤT CẢ models từ linear đến deep CNN. Nhưng càng complex model + hard dataset, SAM càng shine.
+
+**Q3: SAM có giá trị trong thực tế không?**
+- **A:** CÓ, đặc biệt khi:
+  - Thiếu data (+9.5% improvement)
+  - Cần stability với high LR (+22.5% improvement)
+  - Production models cần best accuracy possible
+
+**Q4: Trade-off có đáng không?**
+- **A:** CÓ cho most production use cases. Training 2x lâu hơn nhưng model tốt hơn vĩnh viễn.
+
+#### D. Recommendation chung
+
+**For Researchers:**
+- Luôn thử SAM như một baseline comparison
+- Đặc biệt valuable cho difficult datasets
+- Report both Adam và SAM results
+
+**For Practitioners:**
+- Dùng Adam cho prototyping
+- Switch sang SAM cho final model training
+- Nhất định dùng SAM nếu thiếu data
+
+**For Competitions:**
+- SAM often gives that extra 0.5-2% edge
+- Combine với ensemble cho best results
+
+**For Production:**
+- Cân nhắc giữa training cost vs inference quality
+- Nếu accuracy critical → SAM
+- Nếu training budget tight → Adam
+
+---
+
+### 5. Hướng phát triển
+
+#### Phase 1: Mở rộng thực nghiệm (3-6 tháng)
+
+**A. Thêm datasets:**
+- [ ] **Fashion-MNIST:** Similar to MNIST but harder
+- [ ] **STL-10:** Higher resolution than CIFAR-10
+- [ ] **Tiny ImageNet:** 200 classes, more challenging
+- [ ] **Medical imaging:** 
+  - ISIC Skin Cancer
+  - ChestX-ray
+  - Emphasis on small data regime
+- [ ] **NLP datasets:** 
+  - IMDb sentiment
+  - AG News classification
+
+**B. Test thêm architectures:**
+- [ ] **Vision Transformers (ViT):** SAM với attention mechanisms
+- [ ] **ResNet-50/101:** Deeper networks
+- [ ] **EfficientNet:** SOTA CNN architecture
+- [ ] **MobileNet:** Lightweight models
+- [ ] **U-Net:** Segmentation architecture
+
+**C. Thêm optimizer comparisons:**
+- [ ] **SGD vs SGD+SAM:** So với vanilla SGD
+- [ ] **AdamW vs AdamW+SAM:** Với weight decay
+- [ ] **Adaptive SAM (ASAM):** Improved version
+- [ ] **LookAhead + SAM:** Combination
+
+#### Phase 2: Nghiên cứu sâu (6-12 tháng)
+
+**A. Hyperparameter study:**
+- [ ] **Rho tuning:** Grid search 0.01, 0.02, 0.05, 0.1, 0.2, 0.5
+- [ ] **Learning rate schedules:** 
+  - Cosine annealing với SAM
+  - Step decay với SAM
+  - Warmup strategies
+- [ ] **Batch size impact:** 32, 64, 128, 256, 512
+- [ ] **Weight decay interaction:** Combine SAM + WD
+
+**B. Loss landscape visualization:**
+- [ ] **2D/3D plots:** Visualize flat vs sharp minima
+- [ ] **Sharpness metrics:** Measure numerically
+- [ ] **Hessian eigenvalues:** Mathematical analysis
+- [ ] **Mode connectivity:** Solution path analysis
+
+**C. Generalization deep dive:**
+- [ ] **Out-of-distribution testing:** 
+  - MNIST → MNIST-C (corrupted)
+  - CIFAR-10 → CIFAR-10-C
+- [ ] **Adversarial robustness:**
+  - FGSM, PGD attacks
+  - Compare Adam vs SAM robustness
+- [ ] **Transfer learning:**
+  - Pre-train với SAM
+  - Fine-tune comparison
+- [ ] **Domain adaptation:** Multi-domain learning
+
+#### Phase 3: Engineering improvements (Ongoing)
+
+**A. Performance optimization:**
+- [ ] **Mixed precision (FP16):** Tăng tốc 2-3x
+- [ ] **Gradient accumulation:** Larger effective batch sizes
+- [ ] **Distributed training:** Multi-GPU/multi-node
+- [ ] **Efficient SAM:** Approximate gradient computation
+- [ ] **Checkpointing:** Memory-efficient training
+
+**B. Tooling & Infrastructure:**
+- [ ] **TensorBoard integration:** Real-time monitoring
+- [ ] **Weights & Biases:** Experiment tracking
+- [ ] **Hydra configs:** YAML-based configuration
+- [ ] **CLI arguments:** Flexible hyperparameter control
+- [ ] **Docker containers:** Reproducible environment
+- [ ] **CI/CD pipeline:** Automated testing
+
+**C. Code quality:**
+- [ ] **Type hints:** Full type annotation
+- [ ] **Docstrings:** Google-style documentation
+- [ ] **Unit tests:** >80% coverage
+- [ ] **Integration tests:** End-to-end testing
+- [ ] **Code formatting:** Black, isort
+- [ ] **Linting:** Pylint, flake8
+
+#### Phase 4: Ứng dụng thực tế (12+ tháng)
+
+**A. Domain-specific projects:**
+- [ ] **Medical diagnosis:**
+  - Chest X-ray pneumonia detection
+  - Skin lesion classification
+  - Retinal disease screening
+  - Emphasis: small labeled data + SAM
+- [ ] **NLP applications:**
+  - Sentiment analysis
+  - Text classification
+  - Named Entity Recognition
+- [ ] **Computer Vision:**
+  - Object detection (YOLO + SAM)
+  - Semantic segmentation
+  - Image generation (GAN + SAM)
+- [ ] **Time series:**
+  - Stock prediction
+  - Weather forecasting
+  - Anomaly detection
+
+**B. Production deployment:**
+- [ ] **Model serving:** 
+  - FastAPI REST API
+  - TorchServe
+  - ONNX export
+- [ ] **Monitoring:**
+  - Performance metrics
+  - Drift detection
+  - A/B testing framework
+- [ ] **Scalability:**
+  - Kubernetes deployment
+  - Auto-scaling
+  - Load balancing
+
+**C. Case studies:**
+- [ ] **Industry partnerships:** Real-world problems
+- [ ] **Open-source contributions:** Share findings
+- [ ] **Benchmarking:** Compare với SOTA methods
+
+#### Phase 5: Nghiên cứu học thuật (Ongoing)
+
+**A. Theoretical analysis:**
+- [ ] **Convergence proof:** Mathematical guarantees
+- [ ] **Generalization bounds:** PAC-Bayes analysis
+- [ ] **Flatness measures:** Formal definitions
+- [ ] **Connection to PAC-Bayes:** Theoretical links
+
+**B. Novel SAM variations:**
+- [ ] **Adaptive rho:** Auto-adjust based on training
+- [ ] **Layer-wise SAM:** Different rho per layer
+- [ ] **Stochastic SAM:** Randomized perturbations
+- [ ] **SAM ensemble:** Combine multiple SAM models
+- [ ] **Curriculum SAM:** Progressive difficulty
+
+**C. Publications:**
+- [ ] **Technical report:** Comprehensive findings
+- [ ] **Workshop paper:** ICML, NeurIPS
+- [ ] **Full conference paper:** ICLR, CVPR
+- [ ] **Journal article:** JMLR, PAMI
+- [ ] **Blog posts:** Medium, Towards Data Science
+- [ ] **Video tutorials:** YouTube series
+
+#### Phase 6: Community & Education (Ongoing)
+
+**A. Documentation:**
+- [ ] **Comprehensive guide:** SAM from scratch
+- [ ] **Interactive notebooks:** 
+  - Google Colab tutorials
+  - Jupyter notebooks
+- [ ] **API documentation:** Auto-generated docs
+- [ ] **FAQs:** Common questions
+- [ ] **Troubleshooting guide:** Common issues
+
+**B. Community building:**
+- [ ] **GitHub Discussions:** Q&A forum
+- [ ] **Discord server:** Real-time community
+- [ ] **Contributing guidelines:** How to contribute
+- [ ] **Code of conduct:** Inclusive environment
+- [ ] **Showcase:** User projects using SAM
+
+**C. Educational content:**
+- [ ] **Video series:**
+  - Theory explained
+  - Implementation walkthrough
+  - Best practices
+- [ ] **Blog posts:**
+  - "When to use SAM"
+  - "SAM vs Adam: Deep dive"
+  - "SAM in production"
+- [ ] **Cheat sheet:** Quick reference PDF
+- [ ] **Comparison matrix:** SAM vs other optimizers
+
+---
+
 ## 🔬 Về SAM (Sharpness-Aware Minimization)
 
 SAM là một kỹ thuật tối ưu giúp cải thiện khả năng tổng quát hóa của mô hình bằng cách:
@@ -531,355 +884,32 @@ SAM là một kỹ thuật tối ưu giúp cải thiện khả năng tổng quá
 
 **Trade-off**: Thời gian huấn luyện tăng gấp ~2 lần so với Adam thông thường.
 
-## 📝 Tham số SAM
+---
 
-- `rho`: 0.05 (default) - Bán kính neighborhood để tìm adversarial perturbation
-- `adaptive`: False - Có sử dụng adaptive SAM hay không
-
-Bạn có thể thay đổi các tham số này trong code để thử nghiệm.
-
-## 🎯 Mục tiêu So sánh
-
-1. **Accuracy**: Adam+SAM thường đạt accuracy cao hơn
-2. **Generalization**: Adam+SAM có test loss thấp hơn, giảm overfitting
-3. **Training time**: Adam+SAM chậm hơn ~2x do double forward-backward
-4. **Stability**: Adam+SAM thường có đường training ổn định hơn
-
-## 💡 Tips
+## 💡 Tips quan trọng
 
 1. **GPU**: 
    - **BẮT BUỘC** cài đặt PyTorch với CUDA support nếu có GPU NVIDIA
    - Kiểm tra bằng `nvidia-smi` và `python check_gpu.py`
    - Thời gian chạy nhanh hơn 10-50x so với CPU
-   - Console phải hiển thị `Sử dụng device: cuda` khi chạy
 2. **Virtual Environment**: 
-   - Nếu dùng venv, nhớ kích hoạt bằng `.\.venv\Scripts\Activate.ps1`
-   - Hoặc dùng đường dẫn đầy đủ: `.venv/Scripts/python.exe script.py`
+   - Nếu dùng venv, nhớ kích hoạt trước khi chạy
 3. **Data**: Dữ liệu sẽ được tự động tải xuống vào thư mục `./data`
 4. **Reproducibility**: Đã set seed=42 cho tất cả các thực nghiệm
 5. **Memory**: CNN trên CIFAR-10 cần nhiều RAM/VRAM nhất (~2-4GB VRAM)
 
+---
+
 ## 📚 Tài liệu tham khảo
 
-- [Sharpness-Aware Minimization Paper](https://arxiv.org/abs/2010.01412)
+- [Sharpness-Aware Minimization Paper (Foret et al., 2020)](https://arxiv.org/abs/2010.01412)
 - [PyTorch Documentation](https://pytorch.org/docs/)
 - [MNIST Dataset](http://yann.lecun.com/exdb/mnist/)
 - [CIFAR-10 Dataset](https://www.cs.toronto.edu/~kriz/cifar.html)
 
-## 🐛 Xử lý lỗi thường gặp
-
-### ❌ Lỗi: Code chạy trên CPU thay vì GPU
-
-**Triệu chứng**: Console hiển thị `Sử dụng device: cpu` thay vì `cuda`
-
-**Nguyên nhân**: Đã cài đặt PyTorch phiên bản CPU (ví dụ: `2.9.1+cpu`) thay vì CUDA.
-
-**Giải pháp**:
-```bash
-# 1. Kiểm tra xem GPU có được nhận diện không
-nvidia-smi
-
-# 2. Gỡ PyTorch CPU
-pip uninstall torch torchvision torchaudio -y
-
-# 3. Cài đặt PyTorch CUDA (phù hợp với phiên bản CUDA của bạn)
-# Cho CUDA 12.x:
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
-
-# 4. Kiểm tra lại
-python check_gpu.py
-```
-
-### ❌ Lỗi: Không chạy được bằng lệnh `python script.py`
-
-**Triệu chứng**: Lỗi ModuleNotFoundError hoặc chạy sai Python version
-
-**Nguyên nhân**: Đang dùng Virtual Environment nhưng chưa kích hoạt hoặc lệnh `python` toàn cục trỏ sai.
-
-**Giải pháp**:
-
-**Cách 1 - Kích hoạt Virtual Environment**:
-```powershell
-# Windows PowerShell
-.\.venv\Scripts\Activate.ps1
-
-# Sau đó chạy bình thường
-python logistic_regression_mnist.py
-```
-
-**Cách 2 - Dùng đường dẫn đầy đủ**:
-```powershell
-# Không cần kích hoạt venv
-C:/Users/dotie/Documents/GitHub/Adam_And_Adam-SAM/.venv/Scripts/python.exe script.py
-```
-
-### Lỗi CUDA out of memory
-```bash
-# Giảm batch_size trong code (dòng batch_size = 128 -> 64 hoặc 32)
-```
-
-### Lỗi tải dataset
-```bash
-# Thử tải thủ công hoặc kiểm tra kết nối internet
-# Dataset sẽ được lưu trong thư mục ./data
-```
-
-### Lỗi matplotlib
-```bash
-pip install --upgrade matplotlib
-```
-
-## 📧 Liên hệ
-
-Nếu có vấn đề khi chạy code, hãy kiểm tra:
-1. **Đã cài đúng PyTorch CUDA** (không phải CPU version) - Quan trọng nhất!
-2. PyTorch version tương thích với CUDA driver của GPU
-3. Đã kích hoạt virtual environment (nếu dùng venv)
-4. Python version >= 3.8
-5. Có đủ disk space cho dataset (MNIST ~50MB, CIFAR-10 ~170MB)
-6. Có đủ VRAM trên GPU (tối thiểu 2GB cho CNN)
-
-**Checklist nhanh trước khi chạy**:
-```bash
-# 1. Kiểm tra GPU
-nvidia-smi
-python check_gpu.py
-
-# 2. Kích hoạt venv
-.\.venv\Scripts\Activate.ps1
-
-# 3. Chạy code
-cd "Logistic Regression trên MNIST"
-python logistic_regression_mnist.py
-```
-
 ---
 
-## 🎓 Kết luận
-
-### 📊 Tổng quan kết quả
-
-Qua 5 thực nghiệm toàn diện (3 cơ bản + 2 bổ sung), chúng tôi đã chứng minh được:
-
-#### 1. **SAM cải thiện hiệu suất trong mọi trường hợp**
-
-| Thực nghiệm | Cải thiện Test Acc | Giảm Overfitting | Đánh giá |
-|-------------|-------------------|------------------|----------|
-| Logistic Regression | +1.1% | 29% ↓ | Tốt |
-| MLP | +0.6% | 80% ↓ | Rất tốt |
-| CNN | +2.5% | 37% ↓ | Xuất sắc |
-| High LR | **+22.5%** | - | Vượt trội |
-| Small Data | **+9.5%** | 48% ↓ | Xuất sắc |
-
-#### 2. **SAM đặc biệt hiệu quả trong các tình huống thực tế**
-
-✅ **Khi thiếu dữ liệu training** (Small Data: +9.5%)
-- Rất phổ biến trong medical imaging, rare diseases, specialized domains
-- SAM giúp model "học" thay vì "ghi nhớ"
-- Overfitting giảm gần một nửa
-
-✅ **Khi cần training nhanh với learning rate cao** (High LR: +22.5%)
-- Adam diverge hoặc không ổn định
-- SAM vẫn hội tụ tốt và cho kết quả cao
-- Mở rộng vùng hyperparameter ổn định
-
-✅ **Với mô hình phức tạp, dataset khó** (CNN CIFAR-10: +2.5%)
-- Không gian tham số lớn, dễ overfit
-- SAM tìm được flat minima tốt hơn
-- Ổn định trong training dài
-
-#### 3. **Trade-off hợp lý**
-
-**Chi phí:** 
-- Training time tăng ~2x (do 2 forward-backward passes)
-- Không cần thêm memory đáng kể
-- Code implementation đơn giản
-
-**Lợi ích:**
-- Test accuracy cao hơn rõ rệt
-- Giảm overfitting đáng kể
-- Training ổn định hơn
-- Cho phép dùng learning rate cao hơn
-- Robust với nhiều setting khác nhau
-
-**Kết luận:** Trade-off rất đáng giá, đặc biệt khi accuracy là ưu tiên hàng đầu.
-
-### 🔬 Phát hiện quan trọng
-
-1. **Flat Minima thực sự tốt hơn:** SAM consistently cho test accuracy cao hơn mặc dù train accuracy thấp hơn → chứng minh flat minima generalize tốt hơn sharp minima
-
-2. **SAM không chỉ cải thiện accuracy:** Còn cải thiện độ ổn định, giảm variance, và làm model robust hơn với hyperparameters
-
-3. **Hiệu quả tỷ lệ thuận với độ khó:** Càng khó (ít data, LR cao, model phức tạp), SAM càng vượt trội
-
-### 💡 Khuyến nghị sử dụng
-
-**✅ NÊN dùng SAM khi:**
-- Training production models cần accuracy cao nhất
-- Ít dữ liệu training, dễ overfit
-- Model lớn, dataset khó
-- Gặp vấn đề overfitting nghiêm trọng
-- Training không ổn định với Adam/SGD
-- Có thời gian để train lâu hơn một chút
-
-**⚠️ CÂN NHẮC dùng Adam thông thường khi:**
-- Prototype nhanh, chỉ cần kết quả tạm thời
-- Dataset rất lớn, đơn giản (training time là bottleneck)
-- Model đơn giản, ít overfit
-- Tài nguyên tính toán hạn chế
-- Accuracy chênh lệch vài phần trăm không quan trọng
-
-**🎯 Setting tối ưu:**
-- `rho = 0.05` (default) hoạt động tốt cho hầu hết trường hợp
-- Có thể tăng lên 0.1 nếu overfit nặng
-- Giảm xuống 0.02 nếu dataset rất lớn
-- Kết hợp tốt với data augmentation, dropout, batch normalization
-
-### 📈 Đóng góp của dự án
-
-1. **So sánh toàn diện:** 5 thực nghiệm từ đơn giản đến phức tạp, từ standard đến extreme cases
-2. **Kết quả rõ ràng:** Không chỉ số liệu mà còn phân tích sâu mục đích, kết quả, đánh giá
-3. **Code sẵn sàng:** Dễ reproduce, có GPU optimization, báo cáo tự động
-4. **Hướng dẫn thực tế:** Khi nào dùng, khi nào không, setting thế nào
-
----
-
-## 🚀 Hướng phát triển
-
-### 1. **Mở rộng thực nghiệm**
-
-#### 1.1 Thêm datasets khác
-- [ ] **ImageNet subset**: Test trên dataset lớn, thực tế hơn
-- [ ] **Fashion-MNIST**: Dataset tương tự MNIST nhưng khó hơn
-- [ ] **STL-10**: Ảnh độ phân giải cao hơn CIFAR-10
-- [ ] **Tiny ImageNet**: 200 classes, thách thức hơn
-- [ ] **Medical imaging**: ISIC skin cancer, ChestX-ray (ít data, high-stakes)
-
-#### 1.2 Test với các architecture khác
-- [ ] **Transformers**: ViT, BERT → SAM với attention mechanisms
-- [ ] **ResNet-50, ResNet-101**: Models lớn hơn
-- [ ] **EfficientNet**: Architecture tối ưu
-- [ ] **MobileNet**: Lightweight models
-- [ ] **U-Net**: Segmentation tasks
-
-#### 1.3 Thêm optimizer comparisons
-- [ ] **SGD vs SGD+SAM**: So sánh với vanilla SGD
-- [ ] **AdamW vs AdamW+SAM**: Với weight decay
-- [ ] **RMSprop vs RMSprop+SAM**: Alternative optimizer
-- [ ] **Adaptive SAM (ASAM)**: Phiên bản cải tiến của SAM
-
-### 2. **Nghiên cứu sâu hơn**
-
-#### 2.1 Hyperparameter tuning
-- [ ] **Thử các giá trị rho khác nhau**: 0.01, 0.02, 0.05, 0.1, 0.2, 0.5
-- [ ] **Learning rate scheduling**: Cosine annealing, step decay với SAM
-- [ ] **Batch size impact**: SAM hoạt động thế nào với batch size khác nhau
-- [ ] **Weight decay**: Tương tác giữa SAM và regularization
-
-#### 2.2 Phân tích loss landscape
-- [ ] **Visualize loss surface**: 2D/3D visualization của flat vs sharp minima
-- [ ] **Sharpness metrics**: Đo độ "flat" của minima SAM tìm được
-- [ ] **Hessian eigenvalues**: Phân tích mathematical về flat minima
-- [ ] **Mode connectivity**: SAM có tìm được solutions kết nối tốt hơn không
-
-#### 2.3 Generalization study
-- [ ] **Out-of-distribution testing**: Test trên data khác distribution
-- [ ] **Adversarial robustness**: SAM có robust hơn với adversarial attacks không
-- [ ] **Transfer learning**: Pre-train với SAM rồi fine-tune
-- [ ] **Domain adaptation**: SAM trong multi-domain learning
-
-### 3. **Cải tiến implementation**
-
-#### 3.1 Optimization
-- [ ] **Mixed precision training**: FP16 để tăng tốc
-- [ ] **Gradient accumulation**: Train với batch size lớn hơn
-- [ ] **Distributed training**: Multi-GPU, multi-node
-- [ ] **Efficient SAM**: Approximate gradient để giảm chi phí
-
-#### 3.2 Engineering
-- [ ] **TensorBoard integration**: Real-time monitoring
-- [ ] **Weights & Biases logging**: Experiment tracking
-- [ ] **Checkpointing**: Save best models, resume training
-- [ ] **Config files**: YAML/JSON cho easy experimentation
-- [ ] **Command-line arguments**: Flexible configuration
-
-#### 3.3 Code quality
-- [ ] **Type hints**: Full type annotation
-- [ ] **Documentation**: Docstrings cho tất cả functions
-- [ ] **Unit tests**: Test coverage > 80%
-- [ ] **CI/CD**: Automatic testing với GitHub Actions
-- [ ] **Code refactoring**: Modular, reusable components
-
-### 4. **Ứng dụng thực tế**
-
-#### 4.1 Projects
-- [ ] **Medical diagnosis**: Apply SAM trên medical imaging với ít labeled data
-- [ ] **NLP tasks**: Sentiment analysis, text classification với SAM
-- [ ] **Object detection**: SAM với YOLO, Faster R-CNN
-- [ ] **Recommendation systems**: SAM trong collaborative filtering
-- [ ] **Time series**: SAM cho forecasting, anomaly detection
-
-#### 4.2 Industry applications
-- [ ] **Production deployment**: Docker containerization, API serving
-- [ ] **Model monitoring**: Track performance degradation
-- [ ] **A/B testing**: Compare SAM vs baseline in production
-- [ ] **Cost analysis**: Training cost vs accuracy improvement
-- [ ] **Case studies**: Real-world success stories
-
-### 5. **Nghiên cứu học thuật**
-
-#### 5.1 Theoretical analysis
-- [ ] **Convergence proof**: Mathematical guarantee cho SAM convergence
-- [ ] **Generalization bounds**: Theoretical analysis về tại sao flat minima tốt hơn
-- [ ] **Comparison với PAC-Bayes**: Liên hệ với Bayesian approaches
-
-#### 5.2 Novel variations
-- [ ] **Adaptive rho**: Tự động điều chỉnh rho theo training progress
-- [ ] **Layer-wise SAM**: Áp dụng SAM khác nhau cho từng layer
-- [ ] **Stochastic SAM**: Randomize perturbation direction
-- [ ] **SAM ensemble**: Kết hợp nhiều SAM models
-
-#### 5.3 Paper writing
-- [ ] **Technical report**: Chi tiết findings của dự án này
-- [ ] **Conference submission**: ICML, NeurIPS, ICLR
-- [ ] **Blog posts**: Medium, Towards Data Science
-- [ ] **Tutorial**: Comprehensive guide về SAM
-
-### 6. **Education & Community**
-
-#### 6.1 Documentation
-- [ ] **Video tutorials**: YouTube series giải thích SAM
-- [ ] **Interactive notebooks**: Colab notebooks để experiment
-- [ ] **Cheat sheet**: Quick reference guide
-- [ ] **FAQ**: Common questions và answers
-
-#### 6.2 Community
-- [ ] **GitHub Discussions**: Forum cho Q&A
-- [ ] **Discord server**: Real-time chat
-- [ ] **Contribute guidelines**: Encourage contributions
-- [ ] **Code of conduct**: Healthy community culture
-
-### 🎯 Priority roadmap (3-6 tháng tới)
-
-**Phase 1 (Tháng 1-2):**
-1. ✅ Hoàn thành 5 thực nghiệm cơ bản
-2. [ ] Add TensorBoard logging
-3. [ ] Implement checkpointing
-4. [ ] Test với Fashion-MNIST
-
-**Phase 2 (Tháng 3-4):**
-1. [ ] Thử nghiệm với Transformers (ViT)
-2. [ ] Hyperparameter study (rho values)
-3. [ ] Loss landscape visualization
-4. [ ] Write technical report
-
-**Phase 3 (Tháng 5-6):**
-1. [ ] Medical imaging application
-2. [ ] Distributed training support
-3. [ ] Production deployment guide
-4. [ ] Conference paper submission
-
-### 💬 Đóng góp
+## 💬 Đóng góp
 
 Dự án này mở cho mọi đóng góp! Nếu bạn muốn:
 - Thêm thực nghiệm mới
