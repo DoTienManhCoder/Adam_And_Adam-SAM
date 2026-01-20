@@ -148,7 +148,7 @@ def test(model, test_loader, criterion, device):
     
     return total_loss / len(test_loader), 100. * correct / total
 
-def run_experiment(data_fraction, use_sam=False, epochs=100, device='cuda'):
+def run_experiment(data_fraction, use_sam=False, epochs=50, device='cuda'):
     """
     Chạy thực nghiệm với phần data cụ thể
     """

@@ -142,7 +142,7 @@ def test(model, test_loader, criterion, device):
     
     return total_loss / len(test_loader), 100. * correct / total
 
-def run_experiment(lr, use_sam=False, epochs=30, device='cuda'):
+def run_experiment(lr, use_sam=False, epochs=20, device='cuda'):
     """
     Chạy thực nghiệm với learning rate cụ thể
     """
@@ -286,7 +286,7 @@ def main():
     
     # Test với nhiều learning rates
     learning_rates = [0.001, 0.005, 0.01]  # LR cao để thấy sự khác biệt
-    epochs = 50
+    epochs = 20
     
     results_dict = {}
     
